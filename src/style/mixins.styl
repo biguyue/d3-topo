@@ -1,0 +1,140 @@
+/* 混入写法的集合 */
+@import "./varibles.styl"
+
+transition(types)
+    if types is defined
+        -webkit-transition types
+        -moz-transition types
+        -o-transition types
+        transition types
+
+transform(types)
+    if types is defined
+        -webkit-transform types; /* Safari 和 Chrome */
+        -moz-transform types; /* Firefox */
+        -o-transform types; /* Opera */
+        -ms-transform types; /* IE 9 */
+        transform types
+
+transformOrigin(types) // 设置transform元素的基点位置
+        -ms-transform-origi types		/* IE 9 */
+        -webkit-transform-origin types	/* Safari 和 Chrome */
+        -moz-transform-origin types		/* Firefox */
+        -o-transform-origin types		/* Opera */
+        transform-origin types
+
+animation(types)
+    if types is defined
+        -webkit-animation types /*Safari and Chrome*/
+        -moz-animation types
+        -o-animation types
+        animation types
+
+// 移动动画关键帧
+@keyframes move {
+    from {left:0;}
+    to {left:200px;}
+}
+@-webkit-keyframes move { /*Safari and Chrome*/
+    from {left:0;}
+    to {left:200px;}
+}
+
+// 旋转动画关键帧
+@keyframes rotate {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+}
+@-webkit-keyframes rotate { /*Safari and Chrome*/
+    from {-webkit-transform: rotate(0deg);}
+    to {-webkit-transform: rotate(360deg);}
+}
+
+linearGradient()
+    background -webkit-linear-gradient(arguments)
+    background -moz-linear-gradient(arguments)
+    background -o-linear-gradient(arguments)
+    background linear-gradient(arguments)
+
+// 屏蔽鼠标选中
+no-select()
+    -webkit-touch-callout none /* iOS Safari */
+    -webkit-user-select none /* Chrome/Safari/Opera */
+    -moz-user-select none /* Firefox */
+    -khtml-user-select none /* Konqueror */
+    -ms-user-select none /* Internet Explorer/Edge */
+    user-select none /* Non-prefixed version, currently not supported by any browser */
+
+// 分割线
+divider()
+    position absolute
+    top 0
+    bottom 0
+    width 0.02rem
+    height 0.22rem
+    margin auto 0
+    background rgba(133, 135, 228, 0.2)
+
+// 溢出显示省略号
+ellipsis()
+    overflow hidden
+    white-space nowrap
+    text-overflow ellipsis
+
+// 禁用效果
+disabled()
+    pointer-events none
+    color #999
+
+/**
+ * flex布局
+ * direction: 主轴方向
+ * justifyContent: 主轴对齐方式，flex-start | flex-end | center | space-between | space-around
+ * alignItems：交叉轴对齐方式，flex-start | flex-end | center | baseline | stretch
+ * flexWrap：换行方式，nowrap | wrap | wrap-reverse
+ */
+flexLayout(direction = row, justifyContent = center, alignItems = center, flexWrap = nowrap)
+    display -webkit-box /* Chrome 4+, Safari 3.1, iOS Safari 3.2+ */
+    display -moz-box /* Firefox 17- */
+    display -webkit-flex /* Chrome 21+, Safari 6.1+, iOS Safari 7+, Opera 15/16 */
+    display -moz-flex /* Firefox 18+ */
+    display -ms-flexbox /* IE 10 */
+    display flex /* Chrome 29+, Firefox 22+, IE 11+, Opera 12.1/17/18, Android 4.4+ */
+    // 主轴方向
+    -moz-flex-direction direction
+    -webkit-flex-direction direction
+    flex-direction direction
+    // 主轴对齐方式
+    -webkit-box-pack justifyContent
+    -ms-flex-pack justifyContent
+    -webkit-justify-content justifyContent
+    justify-content justifyContent
+    // 侧轴对齐方式
+    -webkit-align-items alignItems
+    align-items alignItems
+    // 子元素换行
+    -webkit-flex-wrap flexWrap
+    -ms-flex-wrap flexWrap
+    flex-wrap flexWrap
+
+justify-content(type)
+    -webkit-box-pack type
+    -ms-flex-pack type
+    -webkit-justify-content type
+    justify-content type
+
+align-items(type)
+    -webkit-align-items type
+    align-items type
+
+/*
+ * 网格背景
+ * line: 分割线颜色
+ * background：背景色
+ * size：方块+边框的和
+ * border：边框宽度
+ */
+grid-background(line = #25233F, background = #2A2848, size = 5px, border = 1px)
+    background background
+    background-image linear-gradient(line border,transparent 0), linear-gradient(90deg, line border,transparent 0)
+    background-size size size,size size

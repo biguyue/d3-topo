@@ -181,7 +181,7 @@ export default {
             d3.select('#node' + d.id).classed('fixed', d.isfixed);
             // 存储坐标
             // let coordData = {
-            //     id: d.uuid,
+            //     id: d.id,
             //     username: this.$store.state.permission.user.name,
             //     x: d.x / this.size.width,
             //     y: d.y / this.size.height

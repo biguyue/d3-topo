@@ -1,7 +1,7 @@
 {
   "name": "d3-topo",
   "description": "a plugin for de-force topo",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "author": "mhcai",
   "license": "MIT",
   "private": false,
@@ -22,16 +22,14 @@
     "babel-preset-stage-3": "^6.24.1",
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
+    "d3": "^5.9.2",
     "file-loader": "^1.1.4",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
-    "d3": "^5.9.2",
     "vue": "^2.5.11",
     "vue-loader": "^13.0.5",
     "vue-template-compiler": "^2.4.4",
     "webpack": "^3.6.0",
-    "webpack-dev-server": "^3.1.11",
-    "js-yaml": ">=3.13.1",
-    "mem": ">=4.0.0"
+    "webpack-dev-server": "^3.1.11"
   }
 }

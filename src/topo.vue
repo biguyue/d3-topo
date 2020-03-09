@@ -1,5 +1,5 @@
 <!--
- * 功能说明：拓扑绘图模块，包含d3绘图、视图交互、工具栏快捷键等
+ * 功能说明：拓扑绘图模块，包含d3绘图、视图交互、缩略小地图、工具栏快捷键等
  * Created by mhcai on 2019/11/22 9:54.
 -->
 <template>
@@ -13,8 +13,11 @@
                  @link-select-event="linkSelectEvent"
                  @oa-select-event="oaSelectEvent"
                  @draw-callback="drawCallback"
-                 @tick-stop="tickStop"></topo-d3>
+                 @tick-stop="tickStop"
+                 @thumb-map="thumbMapEvent"></topo-d3>
         <p class="noData" v-if="noData">暂无数据</p>
+        <!-- 小地图 -->
+        <thumb-map ref="thumb" v-if="thumb" :size="size" :nodes="nodes" :links="links" :style="thumbStyle"></thumb-map>
         <!-- 遮罩层 -->
         <loading v-if="loading">Loading...</loading>
         <!-- 工具栏 -->
@@ -26,20 +29,19 @@
     /* components */
     import icon from './render/iconSymbol.vue'
     import topoD3 from './render/d3Force.vue'
+    import thumbMap from './render/thumbMap.vue'
     import toolbar from './render/toolbar.vue'
     import loading from './render/loading'
-    /* mixins */
-    // import keyAction from './mixins/keyAction'
 
     export default {
         name: 'topo-module',
         components: {
             icon,
             topoD3,
+            thumbMap,
             toolbar,
             loading
         },
-        // mixins: [keyAction],
         props: {
             // 是否显示遮罩层，初始默认不显示
             loading: {
@@ -59,6 +61,13 @@
                     return true;
                 }
             },
+            // 是否显示小地图，默认不显示
+            thumb: {
+                type: Boolean,
+                default: false 
+            },
+            // 小地图样式
+            thumbStyle: Object,
             // 节点标签显示类型
             nodeLabel: {
                 type: String,
@@ -93,10 +102,6 @@
             clickBlankEvent() {
                 return this._events['click-blank']
             },
-            // 完成DOM树的绘制
-            drawCallback() {
-                return this._events['draw-callback']
-            },
             // 力学抖动事件结束
             tickStop() {
                 return this._events['tick-stop']
@@ -106,8 +111,8 @@
             let width = this.$el.clientWidth,
                 height = this.$el.clientHeight;
             this.size = {
-                width: width,
-                height: height
+                width: Math.max(width, 600),
+                height: Math.max(height, 600)
             };
             window.addEventListener('resize', this.onResize);
         },
@@ -118,6 +123,22 @@
                 this.size = {
                     width: width,
                     height: height
+                }
+            },
+            /**
+             * 完成DOM树的绘制
+             */
+            drawCallback() {
+                // 通知DOM树已构建完毕
+                this.$emit('draw-callback')
+                // 重绘小地图
+                if (this.thumb) {
+                    this.$refs.thumb.initThumbTopo();
+                }
+            },
+            thumbMapEvent() {
+                if (this.thumb) {
+                    this.$refs.thumb.mapEvent();
                 }
             },
             /**
@@ -155,7 +176,7 @@
                     case 'UPDATE':
                         for (let i in nodes) {
                             let node = nodes[i];
-                            if (node.uuid === newNode.uuid) {
+                            if (node.id === newNode.id) {
                                 this.$set(nodes, i, newNode);
                                 break;
                             }
@@ -164,7 +185,7 @@
                     case 'DELETE':
                         for (let i in nodes) {
                             let node = nodes[i];
-                            if (node.uuid === newNode.uuid) {
+                            if (node.id === newNode.id) {
                                 nodes.splice(i, 1);
                                 break;
                             }
@@ -173,7 +194,7 @@
                         let links = this.links;
                         for (let i = 0; i < links.length; i++) {
                             let link = links[i];
-                            if (link.source.uuid === newNode.uuid || link.target.uuid === newNode.uuid) {
+                            if (link.source.id === newNode.id || link.target.id === newNode.id) {
                                 links.splice(i, 1);
                                 if (topoVue) {
                                     topoVue.updateLink('DELETE', link);
@@ -206,7 +227,7 @@
                     case 'UPDATE':
                         for (let i in links) {
                             let link = links[i];
-                            if (link.uuid === newLink.uuid) {
+                            if (link.id === newLink.id) {
                                 this.$set(links, i, newLink);
                                 break;
                             }
@@ -215,7 +236,7 @@
                     case 'DELETE':
                         for (let i in links) {
                             let link = links[i];
-                            if (link.uuid === newLink.uuid) {
+                            if (link.id === newLink.id) {
                                 links.splice(i, 1);
                                 break;
                             }
@@ -237,7 +258,7 @@
                 handler(now, old) {
                     if (now) {
                         now.nodes.forEach(d => {
-                            d.href = '#NE'
+                            !d.href && (d.href = '#NE')
                         });
                         if (old && ((old.nodes.length && old.nodes.length !== now.nodes.length) ||
                                 (old.links.length && old.links.length !== now.links.length))) {
@@ -263,6 +284,8 @@
         }
     }
 </script>
+
+<style lang="stylus" src="./style/topo.styl"></style>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
     .topology-draw

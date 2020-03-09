@@ -1,0 +1,29 @@
+svg.main, svg.thumbMap 
+    g.node
+        fill #657acb
+        circle.nodeCircle
+            fill none
+        use:hover
+            cursor pointer
+        text
+            fill #7a849c
+            text-anchor middle
+            dominant-baseline text-before-edge
+        &.selected
+            circle.nodeCircle
+                stroke @fill
+    g.link
+        path.link
+            fill none
+            stroke #acbbf5
+            opacity .8
+            stroke-width 1
+            //stroke-dasharray 0 19 calc(100% - 38) 19
+            cursor pointer
+        &.selected
+            path.link
+                stroke #657acb
+                stroke-width 3
+        &.downLink
+            path.link
+                stroke #f87d7b

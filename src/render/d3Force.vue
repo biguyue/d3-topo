@@ -24,12 +24,6 @@
             // 设置画布大小
             size: {
                 type: Object,
-                default: () => {
-                    return {
-                        width: 800,
-                        height: 600
-                    }
-                },
                 validator: val => {
                     return typeof val === 'object' && val.hasOwnProperty('width') && !isNaN(val.width) &&
                         val.hasOwnProperty('height') && !isNaN(val.height);
@@ -59,13 +53,12 @@
                 simulation: null, // 力学模型
                 svgStyle: {},
                 alphaTarget: 0.1,
-                nodeSize: 45, // 节点大小
-                nodeHref: '#NE' // 节点图标ID
+                nodeSize: 45 // 节点大小
             }
         },
         mounted() {
-            let width = Math.max(this.size.width, 600);
-            let height = Math.max(this.size.height, 600);
+            let width = this.size.width;
+            let height = this.size.height;
 
             // 定义画布
             let o = d3.select(this.$el);
@@ -78,8 +71,6 @@
             // 为缩放区域增加id
             let s = o.append('g').attr('id', 'topo-zoomlayer').append('g').attr('id', 'topo-force');
             s.append('g').attr('id', 'topo-links');
-            s.append('g').attr('id', 'topo-routes');
-            s.append('g').attr('id', 'topo-tunnels');
             s.append('g').attr('id', 'topo-nodes');
 
             // 定义力学动作
@@ -88,7 +79,7 @@
                 .force('link', d3.forceLink()
                     .distance(d => {
                         return d.length ? ((d.length / 10).toFixed(2) + 10) : 100
-                    }).strength(1).id(d => { return d.uuid; })) // 连线作用力
+                    }).strength(1).id(d => { return d.id; })) // 连线作用力
                 .force('x', width / 2)
                 .force('y', height / 2)
                 .on('tick', () => {
@@ -191,6 +182,8 @@
                         }
                     });
                 }
+                // 触发小地图的同步映射
+                this.$emit('thumb-map')
             },
             /**
              * 对多线进行坐标处理
@@ -245,8 +238,8 @@
                 }
 
                 function aggregateLink(link) {
-                    let key = makeNodeKey(link.source.uuid, link.target.uuid);
-                    let keyRev = makeNodeKey(link.target.uuid, link.source.uuid);
+                    let key = makeNodeKey(link.source.id, link.target.id);
+                    let keyRev = makeNodeKey(link.target.id, link.source.id);
                     let found = findNodePair(key, keyRev);
 
                     if (found) {
@@ -310,8 +303,6 @@
                 let s = d3.select(this.$el).select('#topo-force');
                 s.select('g#topo-links').selectAll('g').remove();
                 s.select('g#topo-nodes').selectAll('g').remove();
-                s.select('g#topo-routes').selectAll('g').remove();
-                s.select('g#topo-tunnels').selectAll('g').remove();
                 // 按新数据重绘
                 this.simulation.stop();
                 this.initTopo();
@@ -331,8 +322,8 @@
         },
         watch: {
             size(now, old) {
-                let width = Math.max(now.width, 600);
-                let height = Math.max(now.height, 600);
+                let width = now.width;
+                let height = now.height;
                 this.svgStyle = {
                     'width': width,
                     'height': height,
@@ -374,34 +365,6 @@
         no-select()
         /deep/ g#topo-force
             font-size 0.14rem
-            g.node
-                fill $topo_ne_color
-                circle.nodeCircle
-                    fill none
-                use:hover
-                    cursor pointer
-                text
-                    fill $font_color
-                    text-anchor middle
-                    dominant-baseline text-before-edge
-                &.selected
-                    circle.nodeCircle
-                        stroke @fill
-            g.link
-                path.link
-                    fill none
-                    stroke $topo_link_color
-                    opacity .8
-                    stroke-width 1
-                    //stroke-dasharray 0 19 calc(100% - 38) 19
-                    cursor pointer
-                &.selected
-                    path.link
-                        stroke $topo_link_select_color
-                        stroke-width 3
-                &.downLink
-                    path.link
-                        stroke #f87d7b
             g.oa-group.hide
                 opacity 0
                 use.image

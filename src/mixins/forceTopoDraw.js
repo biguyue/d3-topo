@@ -58,10 +58,10 @@ export default {
             let drag = this.dragEvent();
             let f = d3.select('#topo-nodes').selectAll('g.node').data(data);
             let p = f.enter().append('g').attr('class', 'node').attr('id', function (t) {
-                return 'node' + t.uuid;
-            })/*.classed('downNode', function (t) {
-                    return t.operateStatus !== 'operate-up';
-                })*/.call(drag);
+                return 'node' + t.id;
+            }).classed('downNode', function (t) {
+                return t.status === 'down';
+            }).call(drag);
 
             this.addNode(p);
         },
@@ -72,8 +72,8 @@ export default {
         addVNode(data) {
             let drag = this.dragEvent();
             let f = d3.select('#topo-nodes');
-            let p = f.append('g').attr('class', 'node')/*.classed('downNode', data.operateStatus !== 'operate-up')*/
-                .attr('id', 'node' + data.uuid).datum(data).call(drag);
+            let p = f.append('g').attr('class', 'node').classed('downNode', data.status === 'down')
+                .attr('id', 'node' + data.id).datum(data).call(drag);
 
             this.addNode(p);
         },
@@ -100,14 +100,14 @@ export default {
          * @param data
          */
         updateVNode(data) {
-            let p = d3.select('#node' + data.uuid);
+            let p = d3.select('#node' + data.id);
             if (!p.node()) {
-                console.log('Can\'t find the node which id is' + data.uuid);
+                console.log('Can\'t find the node which id is' + data.id);
                 return;
             }
-            /*p.classed('downNode', function (t) {
-                return t.operateStatus !== 'operate-up';
-            });*/
+            p.classed('downNode', function (t) {
+                return t.status === 'down';
+            });
             p.selectAll('circle');
             p.selectAll('use').attr('xlink:href', data.href);
             p.select('text.propName.name').text(data.name);
@@ -118,11 +118,11 @@ export default {
          * @param data
          */
         deleteVNode(data) {
-            let p = d3.select('#node' + data.uuid);
+            let p = d3.select('#node' + data.id);
             if (p.node()) {
                 p.remove();
             } else {
-                console.log('Can\'t find the node which id is' + data.uuid);
+                console.log('Can\'t find the node which id is' + data.id);
             }
         },
         /**
@@ -156,7 +156,7 @@ export default {
         addVLinks(data) {
             let f = d3.select('#topo-links').selectAll('g.link').data(data);
             let p = f.enter().append('g').attr('class', 'link').attr('id', function (t) {
-                return 'link' + t.uuid;
+                return 'link' + t.id;
             }).classed('downLink', function (t) {
                 return t.status === 'down';
             });
@@ -172,7 +172,7 @@ export default {
          */
         addVLink(data) {
             let f = d3.select('#topo-links');
-            let p = f.append('g').attr('class', 'link').attr('id', 'link' + data.uuid)
+            let p = f.append('g').attr('class', 'link').attr('id', 'link' + data.id)
                 .classed('downLink', data.status === 'down').datum(data);
             p.append('path').classed('link', true);
             if (this.drawOA) {
@@ -184,9 +184,9 @@ export default {
          * @param data
          */
         updateVLink(data) {
-            let p = d3.select('#link' + data.uuid);
+            let p = d3.select('#link' + data.id);
             if (!p.node()) {
-                console.log('Can\'t find the link which id is' + data.uuid);
+                console.log('Can\'t find the link which id is' + data.id);
                 return;
             }
 
@@ -201,11 +201,11 @@ export default {
          * @param data
          */
         deleteVLink(data) {
-            let p = d3.select('#link' + data.uuid);
+            let p = d3.select('#link' + data.id);
             if (p.node()) {
                 p.remove();
             } else {
-                console.log('Can\'t find the link which id is' + data.uuid);
+                console.log('Can\'t find the link which id is' + data.id);
             }
         },
         /**
@@ -218,7 +218,7 @@ export default {
                 return d.oaList
             });
             let n = m.enter().append('g').attr('class', 'oa').attr('id', t => {
-                return 'oa' + t.uuid
+                return 'oa' + t.id
             })
             n.append('use').attr('width', this.oaSize).attr('height', this.oaSize)
                 .attr('xlink:href', '#arrow').attr('class', 'image')
@@ -228,11 +228,11 @@ export default {
          * @param data
          */
         deleteVOA(data) {
-            let p = d3.select('#oa' + data.uuid);
+            let p = d3.select('#oa' + data.id);
             if (p.node()) {
                 p.remove();
             } else {
-                console.log('Can\'t find the oa which id is' + data.uuid);
+                console.log('Can\'t find the oa which id is' + data.id);
             }
         }
     },

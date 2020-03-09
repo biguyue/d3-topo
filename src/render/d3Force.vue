@@ -78,7 +78,7 @@
                 .force('charge', d3.forceManyBody().strength(-800)) // 节点多体作用力
                 .force('link', d3.forceLink()
                     .distance(d => {
-                        return d.length ? ((d.length / 10).toFixed(2) + 10) : 100
+                        return d.hasOwnProperty('length') ? d.length : 100
                     }).strength(1).id(d => { return d.id; })) // 连线作用力
                 .force('x', width / 2)
                 .force('y', height / 2)

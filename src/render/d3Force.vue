@@ -1,9 +1,5 @@
 <!--
- * @Description：D3-Force绘制拓扑
- * @Author: mhcai
- * @Date: 2019/3/29 10:11
- * @LastEditTime: 2019/12/9 10:41
- * @LastEditors: mhcai
+ * D3-Force绘制拓扑
 -->
 <template>
     <svg class="main" v-bind="svgStyle"></svg>

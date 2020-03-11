@@ -1,6 +1,5 @@
 /**
 * svg图标
-* Created by mhcai on 2019/3/29 16:36.
 */
 <template>
     <svg class="topo-icon" width="0" height="0">

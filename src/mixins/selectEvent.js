@@ -1,6 +1,5 @@
 /**
 * 拓扑点击选择事件
-* Created by mhcai on 2019/4/3 17:15.
 */
 import * as d3 from 'd3';
 

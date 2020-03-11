@@ -1,11 +1,6 @@
 /**
- * @Description：力学图的视图更新模块
- * @Author: mhcai
- * @Date: 2019/12/6 14:33
- * @LastEditTime: 2019/12/9 10:40
- * @LastEditors: mhcai
+ * 力学图的视图更新模块
  */
-/* tools */
 import * as d3 from 'd3';
 
 export default {
@@ -192,9 +187,6 @@ export default {
 
             p.classed('downLink', data.status === 'down');
             p.selectAll('path');
-            if (this.drawOA) {
-                // 更新链路时需考虑OA的更新，数量是否会有增减？
-            }
         },
         /**
          * 删除一条链路

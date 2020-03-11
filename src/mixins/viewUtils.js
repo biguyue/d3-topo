@@ -1,6 +1,5 @@
 /**
 * 视图交互事件，包含平移、缩放、重置和节点拖拽功能
-* Created by mhcai on 2019/4/3 17:31.
 */
 import * as d3 from 'd3';
 

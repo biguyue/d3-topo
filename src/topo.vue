@@ -1,6 +1,5 @@
 <!--
  * 功能说明：拓扑绘图模块，包含d3绘图、视图交互、缩略小地图、工具栏快捷键等
- * Created by mhcai on 2019/11/22 9:54.
 -->
 <template>
     <div class="topology-draw">
@@ -64,7 +63,7 @@
             // 是否显示小地图，默认不显示
             thumb: {
                 type: Boolean,
-                default: false 
+                default: false
             },
             // 小地图样式
             thumbStyle: Object,
@@ -197,6 +196,10 @@
                             if (link.source.id === newNode.id || link.target.id === newNode.id) {
                                 links.splice(i, 1);
                                 if (topoVue) {
+                                    // 更新小地图
+                                    if (this.thumb) {
+                                        this.$refs.thumb.updateLink('DELETE', link);
+                                    }
                                     topoVue.updateLink('DELETE', link);
                                 }
                                 --i;
@@ -209,6 +212,10 @@
                 }
                 // 更新视图DOM
                 if (topoVue) {
+                    // 更新小地图
+                    if (this.thumb) {
+                        this.$refs.thumb.updateNode(type, newNode);
+                    }
                     topoVue.updateNode(type, newNode);
                 }
             },
@@ -249,6 +256,10 @@
                 // 更新视图DOM
                 let topoVue = this.$refs.topo;
                 if (topoVue) {
+                    // 更新小地图
+                    if (this.thumb) {
+                        this.$refs.thumb.updateLink(type, newLink);
+                    }
                     topoVue.updateLink(type, newLink);
                 }
             }

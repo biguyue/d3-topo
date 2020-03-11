@@ -1,6 +1,5 @@
 /**
 * Loading动画组件
-* Created by mhcai on 2019/3/29 13:49.
 */
 <template>
     <div class="loading" :style="{background: background || ''}">

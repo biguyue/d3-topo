@@ -1,6 +1,5 @@
 <!--
  * 功能说明：拓扑工具栏
- * Created by chenming on 2019/11/28 16:01.
  * ==============配置说明==============
  * toolbarRender: 按钮数据对象的数组。结构如下：
  * [
@@ -109,7 +108,7 @@
         position absolute
         top 0.3rem
         right 0
-        text-align right 
+        text-align right
         .toolbar-groups
             margin-right 0.45rem
             flexLayout(row-reverse)

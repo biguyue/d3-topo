@@ -77,12 +77,13 @@
             * 对工具栏数据进行预处理
             */
             initToolbar () {
-                let list = this.GLOBAL.$_.cloneDeep(this.toolbarRender);
-                list.forEach(d => {
-                    d.id = 'toolbar-' + d.id;
+                let list = this.toolbarRender.map(d => {
+                    let tool = Object.assign({}, d);
+                    tool.id = 'toolbar-' + d.id;
                     // title提示信息
-                    d.tip = d.key ? ('快捷键：Alt+' + d.key) : ''
-                });
+                    tool.tip = d.key ? ('快捷键：Alt+' + d.key) : ''
+                    return tool;
+                })
                 this.toolbars = list;
                 //当工具栏中的子项>3时，只显示前3个子项，后续子项在...中显示
                 if (this.toolbars.length > 3) {
@@ -106,16 +107,16 @@
 
     .topo-toolbar
         position absolute
-        top 0.3rem
+        top 30px
         right 0
         text-align right
         .toolbar-groups
-            margin-right 0.45rem
+            margin-right 45px
             flexLayout(row-reverse)
             .toolbar-button
-                min-width 0.8rem
-                height 0.28rem
-                line-height calc(0.28rem - 2px)
+                min-width 80px
+                height 28px
+                line-height 26px
                 color #BBBBBB
                 background $background
                 border 1px solid #BBBBBB
@@ -128,15 +129,15 @@
                     background $mbotton_active_bg_color
                     border 1px solid $mbotton_active_bg_color
                 /deep/ .iconfont
-                    font-size 0.16rem
-                    margin-right 0.05rem
+                    font-size 16px
+                    margin-right 5px
             .el-button + .el-button
-                margin 0 0.13rem 0 0
+                margin 0 13px 0 0
             .more-tools
                 position relative
-                margin-right 0.13rem
+                margin-right 13px
                 .more-button
-                    width 0.33rem
+                    width 33px
                     min-width unset
                     padding 0
                     &:hover
@@ -151,10 +152,10 @@
                         margin 0
     .el-popover // 更多按钮列表
         .list-button
-            height 0.29rem
-            line-height 0.29rem
-            min-width 0.8rem
-            margin 0.02rem 0
+            height 29px
+            line-height 29px
+            min-width 80px
+            margin 2px 0
             background $background
             border 1px solid $background
             color #808FAE
@@ -167,6 +168,6 @@
                 background $mbotton_active_bg_color
                 border 1px solid $mbotton_active_bg_color
             /deep/ .iconfont
-                font-size 0.16rem
-                margin-right 0.05rem
+                font-size 16px
+                margin-right 5px
 </style>

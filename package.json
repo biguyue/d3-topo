@@ -1,7 +1,7 @@
 {
   "name": "d3-topo",
   "description": "a plugin for de-force topo",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "author": "mhcai",
   "license": "MIT",
   "private": false,

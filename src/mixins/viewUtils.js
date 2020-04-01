@@ -95,7 +95,8 @@ export default {
          * @returns {boolean}
          */
         dragEnabled() {
-            return !this.isNodeLock;
+            let e = window.event || d3.event;
+            return e.button === 0 && !this.isNodeLock;
         },
         /**
          * 拖拽事件
@@ -135,7 +136,7 @@ export default {
                     d.dragged = false;
                     d.dragStarted = true;
                     if (!d3.event.active) {
-                        force.alphaTarget(0.02).restart();
+                        force.alphaTarget(vue.alphaMin + 0.1).restart();
                         d.fx = d.x;
                         d.fy = d.y;
                     }
@@ -151,22 +152,24 @@ export default {
             }
 
             function dragEnded(d) {
-                d3.event.sourceEvent.preventDefault();
+                if (vue.dragEnabled()) {
+                    d3.event.sourceEvent.preventDefault();
 
-                if (d.dragStarted) {
-                    d.dragStarted = false;
+                    if (d.dragStarted) {
+                        d.dragStarted = false;
 
-                    if (isDragged(d) && vue.dragEnabled()) {
-                        d.isfixed = true;
-                        vue.atDragEnd(d);
-                    } else {
-                        // 未拖拽
-                        if (!d.isfixed) {
-                            d.fx = d.fy = null;
+                        if (isDragged(d) && vue.dragEnabled()) {
+                            d.isfixed = true;
+                            vue.atDragEnd(d);
+                        } else {
+                            // 未拖拽
+                            if (!d.isfixed) {
+                                d.fx = d.fy = null;
+                            }
                         }
-                    }
-                    if (!d3.event.active) {
-                        force.alphaTarget(0);
+                        if (!d3.event.active) {
+                            force.alphaTarget(0);
+                        }
                     }
                 }
             }
@@ -178,14 +181,7 @@ export default {
          */
         atDragEnd(d) {
             d3.select('#node' + d.id).classed('fixed', d.isfixed);
-            // 存储坐标
-            // let coordData = {
-            //     id: d.id,
-            //     username: this.$store.state.permission.user.name,
-            //     x: d.x / this.size.width,
-            //     y: d.y / this.size.height
-            // };
-            // this.$emit('save-node-coordinate', coordData);
+            this.$emit('drag-end', d);
         }
     }
 }

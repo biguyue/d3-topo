@@ -206,6 +206,58 @@ export default {
                 node.isfixed = false;
                 node.fx = node.fy = null;
             }
+        },
+        /**
+         * 鼠标右键事件
+         * @param {Object} e 鼠标事件
+         */
+        mouseRightClickHandler(e) {
+            if (!this.allowRightClick) return;
+            e.preventDefault();
+            // 获取鼠标位置
+            let target = d3.select(this.$el).select('#topo-zoomlayer');
+            let sc = this.getTransform(target).scale;
+            let tr = this.getTransform(target).translate;
+            let mx = (e.x - tr[0]) / sc; let my = (e.y - tr[1]) / sc;
+            let mp = {
+                x: mx,
+                y: my
+            }
+            // 找到右键的目标
+            if (this.showOA) {
+                // 判断鼠标是否在OA器件附近
+                let oa = this.computeNearestOA(mp)
+                if (oa && this._events['right-click-event']) {
+                    this.$emit('right-click-event', {
+                        type: 'oa',
+                        data: oa,
+                        event: e
+                    });
+                    return;
+                }
+            }
+            // 寻找节点
+            let node = this.computeNearestNode(mp);
+            if (node && this._events['right-click-event']) {
+                this.$emit('right-click-event', {
+                    type: 'node',
+                    data: node,
+                    event: e
+                });
+                return;
+            } else {
+                // 寻找链路
+                let link = this.computeNearestLink(mp);
+                if (link && this._events['right-click-event']) {
+                    this.$emit('right-click-event', {
+                        type: 'link',
+                        data: link,
+                        event: e
+                    });
+                    return;
+                }
+            }
+            this.$emit('right-click-event', null);
         }
     }
 }

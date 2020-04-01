@@ -47,13 +47,13 @@
         right 0
         flexLayout(column)
         .text
-            margin-top 0.3rem
+            margin-top 30px
             text-align center
-            font-size 0.14rem
+            font-size 14px
             color $font_color
         .la-ball-spin-clockwise
             position relative
-            width 0.3rem
+            width 30px
             height @width
             color $loading_color
             font-size 36px
@@ -65,7 +65,7 @@
                 display inline-block
                 top 50%
                 left 50%
-                width 0.07rem
+                width 7px
                 height @width
                 margin-top -4px
                 margin-left -4px

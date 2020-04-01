@@ -42,7 +42,7 @@ export default {
                     console.log('Invalid operation!');
                     break;
             }
-            this.simulation.nodes(this.nodes).alpha(0.2).alphaTarget(this.alphaTarget).restart();
+            this.simulation.nodes(this.nodes).alpha(0.2).restart();
             this.listenerTickEnd();
         },
         /**
@@ -141,7 +141,7 @@ export default {
                     break;
             }
             this.simulation.force('link').links(this.links);
-            this.simulation.alpha(0.1).alphaTarget(0.02).restart();
+            this.simulation.alpha(0.2).restart();
             this.listenerTickEnd();
         },
         /**

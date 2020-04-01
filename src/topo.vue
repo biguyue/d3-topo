@@ -6,11 +6,13 @@
         <!-- svg图标 -->
         <icon></icon>
         <!-- 拓扑绘制模块 -->
-        <topo-d3 ref="topo" :size="size" :nodes="nodes" :links="links" :nodeLabel="nodeLabel"
+        <topo-d3 ref="topo" :size="size" :nodes="nodes" :links="links" :nodeLabel="nodeLabel" :allowRightClick="allowRightClick"
                  @click-blank="clickBlankEvent"
                  @node-select-event="nodeSelectEvent"
                  @link-select-event="linkSelectEvent"
                  @oa-select-event="oaSelectEvent"
+                 @right-click-event="rightClickEvent"
+                 @drag-end="dragEnd"
                  @draw-callback="drawCallback"
                  @tick-stop="tickStop"
                  @thumb-map="thumbMapEvent"></topo-d3>
@@ -73,7 +75,12 @@
                 default: 'name'
             },
             // 自定义工具栏的内容
-            toolbarRender: Array
+            toolbarRender: Array,
+            // 是否允许右键事件
+            allowRightClick: {
+                type: Boolean,
+                default: false
+            }
         },
         data() {
             return {
@@ -90,20 +97,26 @@
                 return !this.loading && !this.nodes.length;
             },
             nodeSelectEvent() {
-                return this._events['node-select']
+                return this._events['node-select'] || function() {}
             },
             linkSelectEvent() {
-                return this._events['link-select']
+                return this._events['link-select'] || function() {}
             },
             oaSelectEvent() {
-                return this._events['oa-select']
+                return this._events['oa-select'] || function() {}
             },
             clickBlankEvent() {
-                return this._events['click-blank']
+                return this._events['click-blank'] || function() {}
+            },
+            rightClickEvent() {
+                return this._events['right-click'] || function() {}
+            },
+            dragEnd() {
+                return this._events['drag-end'] || function() {}
             },
             // 力学抖动事件结束
             tickStop() {
-                return this._events['tick-stop']
+                return this._events['tick-stop'] || function() {}
             }
         },
         mounted() {
@@ -287,7 +300,8 @@
                             });
                         }
                     }
-                }
+                },
+                deep: true
             }
         },
         beforeDestroy() {

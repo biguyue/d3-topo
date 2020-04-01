@@ -2,7 +2,7 @@
  * D3-Force绘制拓扑
 -->
 <template>
-    <svg class="main" v-bind="svgStyle"></svg>
+    <svg class="main" v-bind="svgStyle" @click.right="mouseRightClickHandler"></svg>
 </template>
 
 <script type="text/ecmascript-6">
@@ -42,13 +42,18 @@
                 validator: val => {
                     return ['none', 'name', 'ip'].indexOf(val) !== -1;
                 }
+            },
+            // 是否允许右键事件
+            allowRightClick: {
+                type: Boolean,
+                default: false
             }
         },
         data() {
             return {
                 simulation: null, // 力学模型
                 svgStyle: {},
-                alphaTarget: 0.1,
+                alphaMin: 0.1,
                 nodeSize: 45 // 节点大小
             }
         },
@@ -70,7 +75,7 @@
             s.append('g').attr('id', 'topo-nodes');
 
             // 定义力学动作
-            this.simulation = d3.forceSimulation()
+            this.simulation = d3.forceSimulation().alphaMin(this.alphaMin).alphaTarget(0)
                 .force('charge', d3.forceManyBody().strength(-800)) // 节点多体作用力
                 .force('link', d3.forceLink()
                     .distance(d => {
@@ -308,7 +313,7 @@
              */
             listenerTickEnd() {
                 let inter = setInterval(() => {
-                    if (this.simulation.alpha() <= this.alphaTarget) {
+                    if (this.simulation.alpha() <= this.alphaMin) {
                         // 坐标计算的抖动已结束
                         this.$emit('tick-stop');
                         clearInterval(inter);
@@ -329,7 +334,7 @@
                 this.simulation.force('x', d3.forceX(width / 2)).force('y', d3.forceY(height / 2));
                 if (now.width !== old.width || now.height !== old.height) {
                     // 尺寸改变后需要重新触发力学动作
-                    this.simulation.alpha(0.5).alphaTarget(this.alphaTarget).restart();
+                    this.simulation.alpha(0.5).restart();
                     this.listenerTickEnd();
                 }
             },
@@ -360,7 +365,7 @@
         grid-background($topo_bg_line_color, $topo_bg_color)
         no-select()
         /deep/ g#topo-force
-            font-size 0.14rem
+            font-size 14px
             g.oa-group.hide
                 opacity 0
                 use.image
